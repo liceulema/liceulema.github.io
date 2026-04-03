@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>LEMA</title>
+<meta charset="UTF-8">
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+}
+
+/* Navbar */
+.topnav {
+    display: flex;
+    align-items: center;
+    background-color: #e1e1e1;
+    padding: 0 10px;
+    border-radius: 1rem;
+}
+
+.topnav img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.topnav h2 {
+    margin-right: 10px;
+}
+
+.topnav a {
+    color: black;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.topnav a:hover {
+    background-color: #c2c2c2;
+}
+
+.topnav a.active {
+    background-color: #ff82fb;
+    color: white;
+}
+
+/* Push right items */
+.right {
+    margin-left: auto;
+    display: flex;
+}
+
+/* Hero */
+.hero {
+    padding: 60px 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #ff82fb, #a18cd1);
+    color: white;
+}
+
+.hero h1 {
+    font-size: 40px;
+}
+
+/* Sections */
+.section {
+    padding: 40px 20px;
+}
+
+/* Cards */
+.cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card {
+    flex: 1;
+    min-width: 250px;
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Footer */
+.footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="topnav">
+    <img src="./resc/logo.png" alt="logo">
+    <h2>LEMA</h2>
+
+    <a class="active" href="#home">Home</a>
+    <a href="#news">News</a>
+    <a href="./test.html">Teste</a>
+
+    <div class="right">
+        <a href="#contact">Contact</a>
+        <a onclick="alert('Te-ai logat in Liceulema!')">Login</a>
+    </div>
+</div>
+
+<!-- HERO -->
+<div class="hero" id="home">
+    <h1>Bun Venit la LEMA!</h1>
+    <p>Invata mai putin... dar poate mai destept 😄</p>
+</div>
+
+<!-- NEWS -->
+<div class="section" id="news">
+    <h1>Noutati</h1>
+
+    <div class="cards">
+        <div class="card">
+            <h3>Teste Noi</h3>
+            <p>Am adaugat teste noi pentru matematica si romana.</p>
+        </div>
+
+        <div class="card">
+            <h3>Platforma PDF</h3>
+            <p>Acum poti genera teste direct in PDF!</p>
+        </div>
+
+        <div class="card">
+            <h3>Update Sistem</h3>
+            <p>Interfata imbunatatita pentru o experienta mai buna.</p>
+        </div>
+    </div>
+</div>
+
+<!-- CONTACT -->
+<div class="section" id="contact">
+    <h1>Contact</h1>
+    <p>Email: liceulema@is.notaskid.ong</p>
+    <p>Telefon: 07 676 676 677</p>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <p>© 2026 LEMA - Toate drepturile rezervate</p>
+</div>
+
+</body>
+</html>

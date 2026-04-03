@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+}
+
+/* Navbar */
+.topnav {
+    display: flex;
+    align-items: center;
+    background-color: #e1e1e1;
+    padding: 0 10px;
+    border-radius: 1rem;
+}
+
+.topnav img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+/* Form */
+.container {
+    padding: 20px;
+}
+
+input, select, textarea {
+    display: block;
+    margin: 10px 0;
+    padding: 8px;
+    width: 300px;
+}
+
+.exercise {
+    margin: 10px 0;
+    position: relative;
+}
+
+.exercise textarea {
+    width: 100%;
+}
+
+/* Delete button */
+.delete-btn {
+    position: absolute;
+    right: -40px;
+    top: 0;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 8px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* ================= PDF FIX ================= */
+
+#content {
+    display: none;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Header */
+.pdf-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid black;
+    padding-bottom: 10px;
+    page-break-after: avoid;
+}
+
+.pdf-left img {
+    height: 60px;
+}
+
+.pdf-right {
+    text-align: right;
+}
+
+.pdf-right h2 {
+    margin: 0;
+}
+
+.pdf-right p {
+    margin: 2px 0;
+}
+
+/* Prevent cutting exercises */
+.exercise-pdf {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 20px;
+}
+
+/* Optional: space for answers */
+.answer-space {
+    border-bottom: 1px solid #000;
+    height: 40px;
+    margin-top: 10px;
+}
+
+/* Avoid breaking paragraphs */
+p {
+    page-break-inside: avoid;
+}
+
+/* ========================================== */
+
+.topnav a {
+    margin-left: auto;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topnav">
+    <img src="./resc/logo.png">
+    <h2>LEMA</h2>
+    <h3 style="margin-left:10px;">Teste</h3>
+    <a href="./index.html"> &lt; Inapoi</a>
+</div>
+
+<div class="container">
+    <h1>Creare Test</h1>
+
+    <label>Tip Test:</label>
+    <select id="testType">
+        <option>Model</option>
+        <option>Examen</option>
+    </select>
+
+    <label>Nume Test:</label>
+    <input type="text" id="testName" placeholder="Ex: Test Matematica">
+
+    <label>Profesor:</label>
+    <input type="text" id="teacher" placeholder="Nume profesor">
+
+    <label>Data:</label>
+    <input type="date" id="date">
+
+    <h3>Exercitii:</h3>
+    <div id="exercises"></div>
+
+    <button onclick="addExercise()">➕ Adauga exercitiu</button>
+    <br>
+    <button onclick="generatePDF()">Download PDF</button>
+</div>
+
+<!-- PDF -->
+<div id="content"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+let exerciseCount = 0;
+
+function addExercise() {
+    exerciseCount++;
+
+    const div = document.createElement("div");
+    div.className = "exercise";
+
+    div.innerHTML = `
+        <label>Exercitiul ${exerciseCount}:</label>
+        <textarea placeholder="Scrie exercitiul aici..."></textarea>
+        <button class="delete-btn" onclick="deleteExercise(this)">❌</button>
+    `;
+
+    document.getElementById("exercises").appendChild(div);
+}
+
+function deleteExercise(btn) {
+    btn.parentElement.remove();
+    renumberExercises();
+}
+
+function renumberExercises() {
+    const exercises = document.querySelectorAll(".exercise label");
+    exercises.forEach((label, index) => {
+        label.textContent = "Exercitiul " + (index + 1) + ":";
+    });
+}
+
+function generatePDF() {
+    const content = document.getElementById("content");
+
+    const testType = document.getElementById("testType").value;
+    const testName = document.getElementById("testName").value;
+    const teacher = document.getElementById("teacher").value;
+    const date = document.getElementById("date").value;
+    const exercises = document.querySelectorAll("#exercises textarea");
+
+    let html = `
+    <div class="pdf-header">
+        <div class="pdf-left">
+            <img src="./resc/logo.png">
+        </div>
+        <div class="pdf-right">
+            <h2>${testName}</h2>
+            <p><b>Tip:</b> ${testType}</p>
+            <p><b>Profesor:</b> ${teacher}</p>
+            <p><b>Data:</b> ${date}</p>
+        </div>
+    </div>
+    <br>
+    `;
+
+    exercises.forEach((ex, index) => {
+        html += `
+            <div class="exercise-pdf">
+                <p><b>Exercitiul ${index + 1}:</b></p>
+                <p>${ex.value}</p>
+
+                <!-- Answer space -->
+                <div class="answer-space"></div>
+                <div class="answer-space"></div>
+            </div>
+        `;
+    });
+
+    content.innerHTML = html;
+    content.style.display = "block";
+
+    html2pdf().set({
+        margin: 10,
+        filename: testName || "test.pdf",
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }).from(content).save().then(() => {
+        content.style.display = "none";
+    });
+}
+</script>
+
+</body>
+</html>
