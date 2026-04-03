@@ -62,7 +62,12 @@ button {
 }
 
 /* ================= PDF FIX ================= */
-
+/* Force page break BEFORE element */
+.page-break {
+    page-break-before: always;
+    break-before: always;
+}
+    
 #content {
     display: none;
     padding: 20px;
@@ -217,18 +222,32 @@ function generatePDF() {
     <br>
     `;
 
-    exercises.forEach((ex, index) => {
-        html += `
-            <div class="exercise-pdf">
-                <p><b>Exercitiul ${index + 1}:</b></p>
-                <p>${ex.value}</p>
+    let estimatedHeight = 0;
+const maxHeight = 1000; // approx safe height per page
 
-                <!-- Answer space -->
-                <div class="answer-space"></div>
-                <div class="answer-space"></div>
-            </div>
-        `;
-    });
+exercises.forEach((ex, index) => {
+    // Estimate height based on text length
+    const textLength = ex.value.length;
+    const blockHeight = 100 + (textLength * 0.5);
+
+    // If it would overflow page → force new page
+    if (estimatedHeight + blockHeight > maxHeight) {
+        html += `<div class="page-break"></div>`;
+        estimatedHeight = 0;
+    }
+
+    html += `
+        <div class="exercise-pdf">
+            <p><b>Exercitiul ${index + 1}:</b></p>
+            <p>${ex.value}</p>
+
+            <div class="answer-space"></div>
+            <div class="answer-space"></div>
+        </div>
+    `;
+
+    estimatedHeight += blockHeight;
+});
 
     content.innerHTML = html;
     content.style.display = "block";
